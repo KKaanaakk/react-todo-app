@@ -4,14 +4,21 @@ import { TodosContext } from '../../todo-context';
 import './todo-list.scss';
 
 export const TodoList = () => {
-  const { todos, setTodos } = React.useContext(TodosContext);
+  const { todos, setTodos, filteredTodos } = React.useContext(TodosContext);
 
   const handleDelete = (id) => {
-    // Fix the app to delete a task
+    setTodos(todos.filter((todo) => todo.id !== id));
   };
 
   const toggleCheck = (id) => {
-    // Fix the app to mark a task as completed
+    setTodos(
+      todos.map((todo) => {
+        if (todo.id === id) {
+          return { ...todo, checked: !todo.checked };
+        }
+        return todo;
+      }),
+    );
   };
 
   const handleKeyUp = (e, id) => {
@@ -23,9 +30,9 @@ export const TodoList = () => {
   return (
     <div className="todo-list">
       <span className="todo-list-title">Things to do:</span>
-      {todos.length ? (
+      {filteredTodos.length ? (
         <div className="todo-list-content">
-          {todos.map((todoItem) => (
+          {filteredTodos.map((todoItem) => (
             <Checkbox
               key={todoItem.id}
               label={todoItem.label}
@@ -37,7 +44,7 @@ export const TodoList = () => {
           ))}
         </div>
       ) : (
-        <div className="no-todos">Looks like you&apos;re up for a challenge!</div>
+        <div className="no-todos">No matching tasks found</div>
       )}
     </div>
   );

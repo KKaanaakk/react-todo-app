@@ -22,4 +22,25 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 
+# Editor directories and files
 .idea
+.vscode
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# Local environment files
+.env
+
+# Debug logs
+debug.log
+
+# Temporary files
+*.tmp
+*.temp
+
+# Cache
+.cache/
+.eslintcache

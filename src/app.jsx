@@ -2,6 +2,8 @@ import * as React from 'react';
 import { TodoForm } from './components/todo-form';
 import { TodoList } from './components/todo-list';
 import { TodoResults } from './components/todo-results';
+import { TodoSearch } from './components/todo-search';
+import { TodoFilter } from './components/todo-filter';
 import { TodosContext } from './todo-context';
 import './index.scss';
 
@@ -64,11 +66,34 @@ const todosTemplate = [
 ];
 
 export const App = () => {
-  const [todos, setTodos] = React.useState([]);
+  const [todos, setTodos] = React.useState(todosTemplate);
+  const [searchQuery, setSearchQuery] = React.useState('');
+  const [filter, setFilter] = React.useState('all');
+
+  const filteredTodos = React.useMemo(() => todos
+    .filter((todo) => {
+      // Apply text search filter
+      if (searchQuery) {
+        return todo.label.toLowerCase().includes(searchQuery.toLowerCase());
+      }
+      return true;
+    })
+    .filter((todo) => {
+      // Apply status filter
+      if (filter === 'completed') {
+        return todo.checked;
+      }
+      if (filter === 'active') {
+        return !todo.checked;
+      }
+      return true;
+    }), [todos, searchQuery, filter]);
 
   return (
     <div className="root">
-      <TodosContext.Provider value={{ todos }}>
+      <TodosContext.Provider value={{ todos, setTodos, filteredTodos }}>
+        <TodoSearch searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
+        <TodoFilter filter={filter} setFilter={setFilter} />
         <TodoList />
         <TodoResults />
         <TodoForm />
